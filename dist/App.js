@@ -11084,7 +11084,7 @@ Elm.Items.Actions.make = function (_elm) {
    var update = F2(function (action,model) {
       var _p0 = action;
       switch (_p0.ctor)
-      {case "Loaded": var items = model.items;
+      {case "SetItems": var items = model.items;
            var newItems = _U.update(items,{list: A2($Maybe.withDefault,items.list,_p0._0),isLoading: false});
            return {ctor: "_Tuple2",_0: _U.update(model,{items: newItems}),_1: $Effects.none};
          case "Add": var items = model.items;
@@ -11092,11 +11092,11 @@ Elm.Items.Actions.make = function (_elm) {
            return {ctor: "_Tuple2",_0: _U.update(model,{items: changedItems}),_1: $Effects.none};
          default: return {ctor: "_Tuple2",_0: model,_1: $Effects.none};}
    });
-   var Loaded = function (a) {    return {ctor: "Loaded",_0: a};};
-   var getItems = A3($Tasks$Ajax.get,"/api/items",$Json$Decode.list($Json$Decode.string),Loaded);
+   var SetItems = function (a) {    return {ctor: "SetItems",_0: a};};
+   var getItems = A3($Tasks$Ajax.get,"/api/items",$Json$Decode.list($Json$Decode.string),SetItems);
    var Add = function (a) {    return {ctor: "Add",_0: a};};
    var NoOp = {ctor: "NoOp"};
-   return _elm.Items.Actions.values = {_op: _op,NoOp: NoOp,Add: Add,Loaded: Loaded,update: update,getItems: getItems};
+   return _elm.Items.Actions.values = {_op: _op,NoOp: NoOp,Add: Add,SetItems: SetItems,update: update,getItems: getItems};
 };
 Elm.Items = Elm.Items || {};
 Elm.Items.Views = Elm.Items.Views || {};

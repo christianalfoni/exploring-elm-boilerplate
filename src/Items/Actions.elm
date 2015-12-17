@@ -8,12 +8,12 @@ import Json.Decode as Json
 type Action =
     NoOp
     | Add String
-    | Loaded (Maybe (List String))
+    | SetItems (Maybe (List String))
 
 update : Action -> Model.Model -> (Model.Model, Effects Action)
 update action model =
   case action of
-    Loaded maybeItems ->
+    SetItems maybeItems ->
       let
         items = model.items
         newItems = { items | list = (Maybe.withDefault items.list maybeItems), isLoading = False }
@@ -31,4 +31,4 @@ update action model =
       (model, Effects.none)
 
 getItems =
-  Ajax.get "/api/items" (Json.list Json.string) Loaded
+  Ajax.get "/api/items" (Json.list Json.string) SetItems
