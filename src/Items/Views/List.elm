@@ -1,9 +1,9 @@
-module Views.List where
+module Items.Views.List where
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Actions.Items as Items
+import Items.Actions as Actions
 
 item item =
   li [ ]
@@ -12,7 +12,7 @@ item item =
 view address model =
   div [ class "List" ]
     [
-      button [ onClick address (Items.Add "hoho") ] [ text "add" ],
+      button [ onClick address (Actions.Add "hoho"), disabled model.items.isLoading ] [ text "add item" ],
       ul [ class "List" ]
         (List.map item model.items.list)
     ]

@@ -1,4 +1,4 @@
-module Views.Title where
+module Items.Views.Title where
 
 import Html exposing (..)
 import Html.Attributes exposing (..)

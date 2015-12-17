@@ -2,20 +2,14 @@ module Bingo where
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import StartApp.Simple as StartApp
+import Task
+import Effects exposing (..)
+import StartApp
 
-import Views.Title as Title
-import Views.List as List
-import Model.Items
-import Actions.Items
-
--- UPDATE
-update update data =
-  {data | model = update data.action data.model}
-
-updates updaters =
-  \action model ->
-    .model (List.foldr (update) {action = action, model = model} updaters)
+import Items.Views.Title as Title
+import Items.Views.List as List
+import Items.Actions as ItemsActions
+import Model exposing(model)
 
 -- VIEW
 view address model =
@@ -25,11 +19,31 @@ view address model =
       List.view address model
     ]
 
--- MAIN
+-- INIT
+app =
+  StartApp.start {
+    init = (model, ItemsActions.getItems),
+    view = view,
+    update = updates [
+      ItemsActions.update
+    ],
+    inputs = [ ]
+  }
+
 main =
-  StartApp.start
-    {
-      model = {items = Model.Items.model},
-      view = view,
-      update = updates [Actions.Items.update]
-    }
+  app.html
+
+-- WIRING
+update action update (oldModel, accumulatedEffects) =
+  let
+      (newModel, additionalEffects) = update action oldModel
+  in
+      (newModel, Effects.batch [accumulatedEffects, additionalEffects])
+
+updates updaters =
+  \action model ->
+    List.foldr (update action) (model, Effects.none) updaters
+
+port tasks : Signal (Task.Task Effects.Never ())
+port tasks =
+  app.tasks
